@@ -1,6 +1,8 @@
-import numpy as np
+import numpy as np, os
 import tensorflow as tf
-from tensorflow.python.ops import rnn_cell
+# from tensorflow.contrib.rnn import GRUCell
+# from tensorflow.python.ops import rnn_cell
+from gensim.models import KeyedVectors
 
 from models.base_model import BaseModel
 from models.new.episode_module import EpisodeModule
@@ -11,6 +13,35 @@ class DMN(BaseModel):
     """ Dynamic Memory Networks (March 2016 Version - https://arxiv.org/abs/1603.01417)
         Improved End-To-End version."""
     def build(self):
+
+        def get_word_vectors_from_pretr_embeddings(train, test, vocab):
+            get_pre_trained_emb(vocab)
+
+        def get_pre_trained_emb(vocab):
+            model = get_model()
+            # model loaded
+            # print(len(model.vocab.keys()), len(vocab))
+            idx_to_word = enumerate(vocab)
+            word_to_idx = {}
+            for i, c in idx_to_word:
+                # print(i, c)
+                word_to_idx[c] = i + 1  # 0 reserved for masking
+            emb_dim = 100 #EMBEDDING_DIMENSION
+            vocab_len = len(vocab) + 1  # 0 reserved for masking
+            pre_trained_emb_weights = np.zeros((vocab_len, emb_dim))
+            for word, index in word_to_idx.items():
+                pre_trained_emb_weights[index, :] = model[word]
+            # print(pre_trained_emb_weights)
+            return pre_trained_emb_weights
+
+        def get_model():
+            fname = "word2vec_100_5.w2v"
+            model = KeyedVectors.load_word2vec_format(fname=fname, fvocab="vocab", binary=True)
+            return model
+
+        self.pre_trained_emb_weights = get_pre_trained_emb(self.words.word2idx.keys())
+
+        print(os.getcwd())
         params = self.params
         N, L, Q, F = params.batch_size, params.max_sent_size, params.max_ques_size, params.max_fact_count
         V, d, A = params.embed_size, params.hidden_size, self.words.vocab_size
@@ -23,12 +54,17 @@ class DMN(BaseModel):
         fact_counts = tf.placeholder('int64', shape=[N], name='fc')
         input_mask = tf.placeholder('float32', shape=[N, F, L, V], name='xm')
         is_training = tf.placeholder(tf.bool)
+
+        self.pre_trained_embeddings = tf.Variable(tf.constant(0.0, shape=[A, V]), dtype=tf.float32, trainable=False)
+        self.embedding_placeholder = tf.placeholder(tf.float32, [A, V], name="embedding_placeholder")
+        embedding = self.embedding_placeholder
+
         self.att = tf.constant(0.)
 
         # Prepare parameters
-        gru = rnn_cell.GRUCell(d)
+        gru = tf.nn.rnn_cell.GRUCell(d)
         l = self.positional_encoding()
-        embedding = weight('embedding', [A, V], init='uniform', range=3**(1/2))
+        # embedding = weight('embedding', [A, V], init='uniform', range=3**(1/2))
 
         with tf.name_scope('SentenceReader'):
             input_list = tf.unpack(tf.transpose(input))  # L x [F, N]
@@ -178,5 +214,6 @@ class DMN(BaseModel):
             self.q: question,
             self.y: label,
             self.fc: fact_counts,
-            self.is_training: is_train
+            self.is_training: is_train,
+            self.embedding_placeholder: self.pre_trained_emb_weights
         }

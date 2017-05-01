@@ -10,7 +10,7 @@ flags = tf.app.flags
 
 # directories
 flags.DEFINE_string('model', 'dmn+', 'Model type - dmn+, dmn, dmn_embed [Default: DMN+]')
-flags.DEFINE_boolean('test', False, 'true for testing, false for training [False]')
+flags.DEFINE_boolean('test', True, 'true for testing, false for training [False]')
 flags.DEFINE_string('data_dir', 'data/tasks_1-20_v1-2/en-10k', 'Data directory [data/tasks_1-20_v1-2/en-10k]')
 flags.DEFINE_string('save_dir', 'save', 'Save path [save]')
 
@@ -29,7 +29,9 @@ flags.DEFINE_integer('memory_step', 3, 'Episodic Memory steps [3]')
 flags.DEFINE_string('memory_update', 'relu', 'Episodic meory update method - relu or gru [relu]')
 # flags.DEFINE_bool('memory_tied', False, 'Share memory update weights among the layers? [False]')
 flags.DEFINE_integer('glove_size', 50, 'GloVe size - Only used in dmn [50]')
-flags.DEFINE_integer('embed_size', 80, 'Word embedding size - Used in dmn+, dmn_embed [80]')
+flags.DEFINE_integer('embed_size', 100, 'Word embedding size - Used in dmn+, dmn_embed [80]')
+# flags.DEFINE_integer('embed_size', 80, 'Word embedding size - Used in dmn+, dmn_embed [80]')
+# flags.DEFINE_integer('hidden_size', 80, 'Size of hidden units [80]')
 flags.DEFINE_integer('hidden_size', 80, 'Size of hidden units [80]')
 
 # train hyperparameters

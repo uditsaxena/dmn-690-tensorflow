@@ -67,11 +67,13 @@ def process_babi(raw, word_table):
     for x in raw:
         inp = []
         for fact in x["C"]:
-            sent = [w for w in fact.lower().split(' ') if len(w) > 0]
+            # sent = [w for w in fact.lower().split(' ') if len(w) > 0]
+            sent = [w for w in fact.split(' ') if len(w) > 0]
             inp.append(sent)
             word_table.add_vocab(*sent)
 
         q = [w for w in x["Q"].lower().split(' ') if len(w) > 0]
+        q = [w for w in x["Q"].split(' ') if len(w) > 0]
 
         word_table.add_vocab(*q, x["A"])
 
