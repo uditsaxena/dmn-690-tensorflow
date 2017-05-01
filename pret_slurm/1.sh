@@ -10,6 +10,7 @@
 echo $SLURM_JOBID - `hostname` >> ~/slurm-lstm-jobs.txt
 
 module purge
+module unload all
 module load tensorflow/1.0.0
 module load python/3.5.2
 cd /home/usaxena/work/690/dmn
