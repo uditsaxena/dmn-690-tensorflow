@@ -56,7 +56,7 @@ class DMN(BaseModel):
         input_mask = tf.placeholder('float32', shape=[N, F, L, V], name='xm')
         is_training = tf.placeholder(tf.bool)
 
-        self.pre    _trained_embeddings = tf.Variable(tf.constant(0.0, shape=[A, V]), dtype=tf.float32, trainable=False, name="W")
+        self.pre_trained_embeddings = tf.Variable(tf.constant(0.0, shape=[A, V]), dtype=tf.float32, trainable=False, name="W")
         embedding_placeholder = tf.placeholder(tf.float32, [A, V])
         embedding = embedding_placeholder
 
