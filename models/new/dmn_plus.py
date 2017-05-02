@@ -1,9 +1,9 @@
 import numpy as np, os
 import tensorflow as tf
 # from tensorflow.contrib.rnn import GRUCell
-# from tensorflow.python.ops import rnn_cell
+from tensorflow.python.ops import rnn_cell
 from gensim.models import KeyedVectors
-from tensorflow.contrib.rnn.python.ops import rnn_cell
+#from tensorflow.contrib.rnn.python.ops import rnn_cell
 
 from models.base_model import BaseModel
 from models.new.episode_module import EpisodeModule

@@ -52,8 +52,9 @@ class BaseModel(object):
             if val_data and (epoch_no + 1) % params.val_period == 0:
                 self.eval(sess, val_data, name='Validation')
 
-            if (epoch_no + 1) % params.save_period == 0:
-                self.save(sess)
+            print("Not saving...")
+            # if (epoch_no + 1) % params.save_period == 0:
+            #     self.save(sess)
 
         print("Training completed.")
 

@@ -72,20 +72,23 @@ def main(_):
     print('Word count: %d, Max sentence len : %d' % (words.vocab_size, FLAGS.max_sent_size))
 
     # Modify save dir
-    FLAGS.save_dir += '/task_%d/' % FLAGS.task
-    if not os.path.exists(FLAGS.save_dir):
-        os.makedirs(FLAGS.save_dir, exist_ok=True)
+    # FLAGS.save_dir += '/task_%d/' % FLAGS.task
+    # if not os.path.exists(FLAGS.save_dir):
+    #     os.makedirs(FLAGS.save_dir, exist_ok=True)
 
     with tf.Session() as sess:
         model = DMN(FLAGS, words)
         sess.run(tf.initialize_all_variables())
 
-        if FLAGS.test:
-            model.load(sess)
-            model.eval(sess, test, name='Test')
-        else:
-            if FLAGS.load: model.load(sess)
-            model.train(sess, train, val)
+        print("Training: ")
+        model.train(sess, train, val)
+
+        print("Testing: ")
+        model.eval(sess, test, name='Test')
+        # if FLAGS.test:
+        #     model.load(sess)
+        # else:
+        #     # if FLAGS.load: model.load(sess)
 
 if __name__ == '__main__':
     tf.app.run()
