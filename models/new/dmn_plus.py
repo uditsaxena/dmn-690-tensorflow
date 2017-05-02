@@ -36,11 +36,11 @@ class DMN(BaseModel):
             return pre_trained_emb_weights
 
         def get_model():
-            fname = "word2vec_100_5.w2v"
+            fname = "word2vec_100_1000.w2v"
             model = KeyedVectors.load_word2vec_format(fname=fname, fvocab="vocab", binary=True)
             return model
 
-        # self.pre_trained_emb_weights = get_pre_trained_emb(self.words.word2idx.keys())
+        self.pre_trained_emb_weights = get_pre_trained_emb(self.words.word2idx.keys())
 
         print(os.getcwd())
         params = self.params
@@ -56,12 +56,16 @@ class DMN(BaseModel):
         input_mask = tf.placeholder('float32', shape=[N, F, L, V], name='xm')
         is_training = tf.placeholder(tf.bool)
 
+        self.pre    _trained_embeddings = tf.Variable(tf.constant(0.0, shape=[A, V]), dtype=tf.float32, trainable=False, name="W")
+        embedding_placeholder = tf.placeholder(tf.float32, [A, V])
+        embedding = embedding_placeholder
+
         self.att = tf.constant(0.)
 
         # Prepare parameters
         gru = rnn_cell.GRUCell(d)
         l = self.positional_encoding()
-        embedding = weight('embedding', [A, V], init='uniform', range=3**(1/2))
+        # embedding = weight('embedding', [A, V], init='uniform', range=3**(1/2))
 
         with tf.name_scope('SentenceReader'):
             input_list = tf.unpack(tf.transpose(input))  # L x [F, N]
@@ -211,5 +215,6 @@ class DMN(BaseModel):
             self.q: question,
             self.y: label,
             self.fc: fact_counts,
-            self.is_training: is_train
+            self.is_training: is_train,
+            self.pre_trained_embeddings: self.pre_trained_emb_weights
         }
