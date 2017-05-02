@@ -21,3 +21,7 @@ module load cuda75/toolkit/7.5.18
 cd /home/usaxena/work/690/dmn
 python main.py --task 1 --test false
 python main.py --task 1 --test true
+python main.py --task 2 --test false
+python main.py --task 2 --test true
+python main.py --task 3 --test false
+python main.py --task 3 --test true

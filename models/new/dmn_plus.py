@@ -3,6 +3,7 @@ import tensorflow as tf
 # from tensorflow.contrib.rnn import GRUCell
 # from tensorflow.python.ops import rnn_cell
 from gensim.models import KeyedVectors
+from tensorflow.contrib.rnn.python.ops import rnn_cell
 
 from models.base_model import BaseModel
 from models.new.episode_module import EpisodeModule
@@ -39,7 +40,7 @@ class DMN(BaseModel):
             model = KeyedVectors.load_word2vec_format(fname=fname, fvocab="vocab", binary=True)
             return model
 
-        self.pre_trained_emb_weights = get_pre_trained_emb(self.words.word2idx.keys())
+        # self.pre_trained_emb_weights = get_pre_trained_emb(self.words.word2idx.keys())
 
         print(os.getcwd())
         params = self.params
@@ -55,16 +56,12 @@ class DMN(BaseModel):
         input_mask = tf.placeholder('float32', shape=[N, F, L, V], name='xm')
         is_training = tf.placeholder(tf.bool)
 
-        self.pre_trained_embeddings = tf.Variable(tf.constant(0.0, shape=[A, V]), dtype=tf.float32, trainable=False)
-        self.embedding_placeholder = tf.placeholder(tf.float32, [A, V], name="embedding_placeholder")
-        embedding = self.embedding_placeholder
-
         self.att = tf.constant(0.)
 
         # Prepare parameters
-        gru = tf.nn.rnn_cell.GRUCell(d)
+        gru = rnn_cell.GRUCell(d)
         l = self.positional_encoding()
-        # embedding = weight('embedding', [A, V], init='uniform', range=3**(1/2))
+        embedding = weight('embedding', [A, V], init='uniform', range=3**(1/2))
 
         with tf.name_scope('SentenceReader'):
             input_list = tf.unpack(tf.transpose(input))  # L x [F, N]
@@ -214,6 +211,5 @@ class DMN(BaseModel):
             self.q: question,
             self.y: label,
             self.fc: fact_counts,
-            self.is_training: is_train,
-            self.embedding_placeholder: self.pre_trained_emb_weights
+            self.is_training: is_train
         }

@@ -19,5 +19,9 @@ module load cuda75/nsight/7.5.18
 module load cuda75/profiler/7.5.18
 module load cuda75/toolkit/7.5.18
 cd /home/usaxena/work/690/dmn
-python main.py --task 6 --test false
-python main.py --task 6 --test true
+python main.py --task 16 --test false
+python main.py --task 16 --test true
+python main.py --task 17 --test false
+python main.py --task 17 --test true
+python main.py --task 18 --test false
+python main.py --task 18 --test true

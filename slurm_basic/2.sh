@@ -20,5 +20,9 @@ module load cuda75/profiler/7.5.18
 module load cuda75/toolkit/7.5.18
 
 cd /home/usaxena/work/690/dmn
-python main.py --task 2 --test false
-python main.py --task 2 --test true
+python main.py --task 4 --test false
+python main.py --task 4 --test true
+python main.py --task 5 --test false
+python main.py --task 5 --test true
+python main.py --task 6 --test false
+python main.py --task 6 --test true
